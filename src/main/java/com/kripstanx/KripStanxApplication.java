@@ -46,6 +46,7 @@ public class KripStanxApplication {
 		}
 
 		log.info("Default user count ({})", applicationProperties.getDefaultUsers().size());
+		log.info("Test");
 		insertOrUpdateDefaultUsers();
 	}
 
