@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
 
@@ -19,7 +20,7 @@ import java.util.Collection;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@EnableConfigurationProperties({ ApplicationProperties.class })
+@EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 public class KripStanxApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(KripStanxApplication.class);
