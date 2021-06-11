@@ -42,7 +42,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String firstName;
 
     @Size(max = 50)
-    @Column(name = "lastName", length = 50)
+    @Column(name = "lastname", length = 50)
     private String lastName;
 
     @Email
@@ -60,7 +60,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Instant jwtToken2ExpiresAt;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "active_indicator", nullable = false)
     private boolean activeIndicator;
 
     @Size(min = 2, max = 6)
