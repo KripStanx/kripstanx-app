@@ -8,7 +8,7 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const WebpackNotifierPlugin = require('webpack-notifier');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
+//const ESLintPlugin = require('eslint-webpack-plugin');
 
 const tls = process.env.TLS;
 
@@ -16,12 +16,12 @@ module.exports = (config, options, targetOptions) => {
   // PLUGINS
   if (config.mode === 'development') {
     config.plugins.push(
-      new ESLintPlugin({
-        extensions: ['js', 'ts'],
-      }),
+      // new ESLintPlugin({
+      //   extensions: ['js', 'ts'],
+      // }),
       new FriendlyErrorsWebpackPlugin(),
       new WebpackNotifierPlugin({
-        title: 'Jhipster Mono Application',
+        title: 'KripStanx Application',
         contentImage: path.join(__dirname, 'logo-jhipster.png'),
       })
     );

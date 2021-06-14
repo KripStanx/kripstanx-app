@@ -134,7 +134,7 @@ public class UserJWTController {
             String resetKey = requestResetIfUserPasswordExpired(lowerCase);
             return ResponseEntity.status(HttpStatus.CONFLICT)
                                  .header(HttpHeaders.LOCATION, "/reset/finish")
-                                 .header("fdm-reset-key", resetKey)
+                                 .header("kripstanx-reset-key", resetKey)
                                  .build();
         } else {
             SecurityContextHolder.getContext().setAuthentication(authentication);
