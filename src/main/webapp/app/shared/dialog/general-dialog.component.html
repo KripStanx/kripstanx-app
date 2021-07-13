@@ -1,0 +1,13 @@
+<form name="generalDialogForm">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ title }}</h4>
+  </div>
+  <div class="modal-body">
+    <p *ngFor="let msg of body">{{ msg }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onButtonClicked()">
+      <span>{{ button }}</span>
+    </button>
+  </div>
+</form>

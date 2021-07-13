@@ -1,0 +1,13 @@
+<form name="updateErrorUnprocessableForm">
+  <div class="modal-header errorheader">
+    <h4 class="modal-title">Error</h4>
+  </div>
+  <div class="modal-body errorbody">
+    <p>{{ errorMsg }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn errorok" data-dismiss="modal" (click)="clear()">
+      <span>OK</span>
+    </button>
+  </div>
+</form>

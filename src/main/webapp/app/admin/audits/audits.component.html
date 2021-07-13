@@ -1,0 +1,90 @@
+<header class="jh-card page__heading">
+  <h2 id="page-heading" class="headingwithouttabs">
+    <span>FDM User Audits</span>
+  </h2>
+</header>
+<main class="card jh-card">
+  <div class="table-responsive">
+    <div class="col-md-8">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">from</span>
+        </div>
+        <input
+          type="text"
+          class="form-control"
+          name="start"
+          ngbDatepicker
+          #fromDateDp="ngbDatepicker"
+          [(ngModel)]="fromDateMoment"
+          (ngModelChange)="transition()"
+          required
+        />
+        <span class="input-group-append">
+          <button type="button" class="btn-secondary" (click)="fromDateDp.toggle()">
+            <fa-icon [icon]="'calendar-alt'"></fa-icon>
+          </button>
+        </span>
+
+        <div class="input-group-append">
+          <span class="input-group-text">To</span>
+        </div>
+        <input
+          type="text"
+          class="form-control"
+          name="end"
+          ngbDatepicker
+          #toDateDp="ngbDatepicker"
+          [(ngModel)]="toDateMoment"
+          (ngModelChange)="transition()"
+          required
+        />
+        <span class="input-group-append">
+          <button type="button" class="btn-secondary" (click)="toDateDp.toggle()">
+            <fa-icon [icon]="'calendar-alt'"></fa-icon>
+          </button>
+        </span>
+      </div>
+    </div>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th style="width: 20%" scope="col"><span>Date</span></th>
+          <th style="width: 10%" scope="col"><span>User</span></th>
+          <th style="width: 20%" scope="col"><span>State</span></th>
+          <th style="width: 40%" scope="col"><span>Extra data</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let audit of audits">
+          <td>
+            <span>{{ audit.timestamp | date: 'dd/MM/yy HH:mm:ss' }}</span>
+          </td>
+          <td><span class=""></span>{{ audit.principal }}</td>
+          <td>{{ audit.type }}</td>
+          <td>
+            <span *ngIf="audit.data" ng-show="audit.data.message">{{ audit.data.message }}</span>
+            <br *ngIf="audit.data.message" />
+            <span *ngIf="audit.data" ng-show="audit.data.remoteAddress"><span>Remote Address</span> {{ audit.data.remoteAddress }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <div class="row justify-content-center">
+      <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+    </div>
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage(page)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</main>

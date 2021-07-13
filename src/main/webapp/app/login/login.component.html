@@ -1,0 +1,69 @@
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="box common">
+    <mat-card-header>
+      <div class="logoLogin"></div>
+      <!-- <mat-card-title>Log in</mat-card-title> -->
+    </mat-card-header>
+
+    <form #editForm="ngForm" class="example-form" (ngSubmit)="login()" id="editForm" name="form" role="form" autocomplete="off">
+      <mat-card-content>
+        <mat-form-field class="example-full-width">
+          <mat-label>Username</mat-label>
+          <input matInput type="username" name="username" id="username" (keyup)="onkeyDown($event)" [(ngModel)]="username" required />
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            placeholder="Password"
+            name="password"
+            id="password"
+            (keyup)="onkeyDown($event)"
+            (keyup.enter)="editForm.ngSubmit.emit()"
+            [(ngModel)]="password"
+            required
+          />
+        </mat-form-field>
+      </mat-card-content>
+      <mat-hint *ngIf="capsLockIsOn" class="fw-bold" style="font-size: 0.75rem">Caps Lock is On!</mat-hint>
+      <!-- <div style="height: 22px;">
+        <small class="fw-bold" *ngIf="capsLockIsOn">
+            Caps Lock is On!
+        </small>
+      </div> -->
+
+      <button
+        mat-stroked-button
+        color="accent"
+        class="btn-block"
+        (click)="editForm.ngSubmit.emit()"
+        [disabled]="editForm.form.invalid || isLogin"
+      >
+        Login<i class="fas fa-md fa-sign-in-alt ml-1" aria-hidden="true"></i>
+      </button>
+    </form>
+  </mat-card>
+</div>
+<!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModelLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="errorModelLabel">Error!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="../../../content/images/logo-kripstanx.png" class="w-auto mb-2" width="75" height="75" />
+        <div class="alert alert-danger m-0" *ngIf="authenticationError">
+          <strong>{{ errorMsg1 }}</strong
+          ><br />{{ errorMsg2 }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
