@@ -2,13 +2,12 @@ package com.kripstanx.service.mapper;
 
 import com.kripstanx.domain.Authority;
 import com.kripstanx.domain.User;
-import com.kripstanx.service.dto.UserDTO;
-import org.springframework.stereotype.Service;
-
+import com.kripstanx.service.dto.AdminUserDTO;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 /**
  * Mapper for the entity User and its DTO called UserDTO.
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserMapper {
 
-    public User userDTOToUser(UserDTO userDTO) {
+    public User userDTOToUser(AdminUserDTO userDTO) {
         if (userDTO == null) {
             return null;
         } else {
@@ -40,11 +39,8 @@ public class UserMapper {
         }
     }
 
-    public List<User> userDTOsToUsers(List<UserDTO> userDTOs) {
-        return userDTOs.stream()
-                       .filter(Objects::nonNull)
-                       .map(this::userDTOToUser)
-                       .collect(Collectors.toList());
+    public List<User> userDTOsToUsers(List<AdminUserDTO> userDTOs) {
+        return userDTOs.stream().filter(Objects::nonNull).map(this::userDTOToUser).collect(Collectors.toList());
     }
 
     public User userFromId(Long id) {
@@ -57,15 +53,20 @@ public class UserMapper {
     }
 
     public Set<Authority> authoritiesFromStrings(Set<String> strings) {
-        return strings.stream().map(string -> {
-            Authority auth = new Authority();
-            auth.setName(string);
-            return auth;
-        }).collect(Collectors.toSet());
+        return strings
+            .stream()
+            .map(
+                string -> {
+                    Authority auth = new Authority();
+                    auth.setName(string);
+                    return auth;
+                }
+            )
+            .collect(Collectors.toSet());
     }
 
-    public UserDTO toDto(User user) {
-        UserDTO userDTO = new UserDTO();
+    public AdminUserDTO toDto(User user) {
+        AdminUserDTO userDTO = new AdminUserDTO();
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
         userDTO.setFirstName(user.getFirstName());
@@ -78,16 +79,11 @@ public class UserMapper {
         userDTO.setCreatedDate(user.getCreatedDate());
         userDTO.setLastModifiedBy(user.getLastModifiedBy());
         userDTO.setLastModifiedDate(user.getLastModifiedDate());
-        userDTO.setAuthorities(user.getAuthorities().stream()
-                                   .map(Authority::getName)
-                                   .collect(Collectors.toSet()));
+        userDTO.setAuthorities(user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet()));
         return userDTO;
     }
 
-    public List<UserDTO> toDTOs(List<User> users) {
-        return users.stream()
-                    .filter(Objects::nonNull)
-                    .map(this::toDto)
-                    .collect(Collectors.toList());
+    public List<AdminUserDTO> toDTOs(List<User> users) {
+        return users.stream().filter(Objects::nonNull).map(this::toDto).collect(Collectors.toList());
     }
 }

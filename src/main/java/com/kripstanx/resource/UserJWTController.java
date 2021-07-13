@@ -10,6 +10,12 @@ import com.kripstanx.security.jwt.JWTFilter;
 import com.kripstanx.service.AuditEventService;
 import com.kripstanx.service.UserService;
 import io.jsonwebtoken.Claims;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,13 +32,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller to authenticate users.
@@ -56,9 +55,12 @@ public class UserJWTController {
     @Value("${application.login-inactivity-period-in-days:30}")
     private int loginInactivityPeriodInDays;
 
-    public UserJWTController(SessionService sessionService,
-                             AuthenticationManager authenticationManager,
-                             AuditEventService auditEventService, UserService userService) {
+    public UserJWTController(
+        SessionService sessionService,
+        AuthenticationManager authenticationManager,
+        AuditEventService auditEventService,
+        UserService userService
+    ) {
         this.sessionService = sessionService;
         this.authenticationManager = authenticationManager;
         this.auditEventService = auditEventService;
@@ -68,9 +70,10 @@ public class UserJWTController {
     @PostMapping("/authenticate")
     @Timed
     public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM, HttpServletRequest request) {
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginVM.getUsername(),
-                                                                                                          loginVM.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+            loginVM.getUsername(),
+            loginVM.getPassword()
+        );
 
         authenticationToken.setDetails(new WebAuthenticationDetails(request));
 
@@ -82,9 +85,10 @@ public class UserJWTController {
 
             return respondWithJwtTokenOrNavigateToResetScreen(loginVM, authentication);
         } catch (InternalAuthenticationServiceException internalAuthenticationServiceException) {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED)
-                                 .header("message", internalAuthenticationServiceException.getMessage())
-                                 .build();
+            return ResponseEntity
+                .status(HttpStatus.PRECONDITION_FAILED)
+                .header("message", internalAuthenticationServiceException.getMessage())
+                .build();
         } catch (AuthenticationException authException) {
             lockUserIfExceedsThreeFailedAttempt(loginVM.getUsername());
             throw authException;
@@ -92,8 +96,7 @@ public class UserJWTController {
     }
 
     private boolean lockUserIfNeededDueToInactivity(String login) {
-        List<AuditEvent> lastSuccessfulLogins = auditEventService
-            .getSuccesfulAuditEventsByUserOrderByAuditEventDateDesc(login);
+        List<AuditEvent> lastSuccessfulLogins = auditEventService.getSuccesfulAuditEventsByUserOrderByAuditEventDateDesc(login);
         if (lastSuccessfulLogins.size() < 2) {
             return false;
         }
@@ -116,11 +119,8 @@ public class UserJWTController {
         Optional<Claims> maybeJwtClaims = this.sessionService.isSessionValid(jwtToken);
         Authentication authentication = sessionService.createAuthentication(jwtToken, maybeJwtClaims.get());
         String jwt = sessionService.createAndStoreSessionToken(authentication);
-        return ResponseEntity.ok()
-                             .header(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt)
-                             .body(new JWTToken(jwt));
+        return ResponseEntity.ok().header(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt).body(new JWTToken(jwt));
     }
-
 
     @GetMapping("/keep-alive-session")
     public Boolean keepAlive() {
@@ -128,42 +128,39 @@ public class UserJWTController {
     }
 
     private ResponseEntity<JWTToken> respondWithJwtTokenOrNavigateToResetScreen(
-            @RequestBody @Valid LoginVM loginVM, Authentication authentication) {
+        @RequestBody @Valid LoginVM loginVM,
+        Authentication authentication
+    ) {
         String lowerCase = loginVM.getUsername().toLowerCase();
         if (userService.isUserPasswordExpired(lowerCase)) {
             String resetKey = requestResetIfUserPasswordExpired(lowerCase);
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                                 .header(HttpHeaders.LOCATION, "/reset/finish")
-                                 .header("kripstanx-reset-key", resetKey)
-                                 .build();
+            return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .header(HttpHeaders.LOCATION, "/reset/finish")
+                .header("kripstanx-reset-key", resetKey)
+                .build();
         } else {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             sessionService.invalidateSession(loginVM.getUsername());
             String jwt = sessionService.createAndStoreSessionToken(authentication);
-            return ResponseEntity.ok()
-                                 .header(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt)
-                                 .body(new JWTToken(jwt));
+            return ResponseEntity.ok().header(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt).body(new JWTToken(jwt));
         }
     }
 
     private void lockUserIfExceedsThreeFailedAttempt(String login) {
-        List<AuditEvent> listOfLastThreeLoginAttempts = auditEventService.findTop3ByPrincipalOrderByAuditEventDateDesc(
-            login);
+        List<AuditEvent> listOfLastThreeLoginAttempts = auditEventService.findTop3ByPrincipalOrderByAuditEventDateDesc(login);
 
         boolean maxFailedLoginAttempts =
-            listOfLastThreeLoginAttempts.size() >= 3 && listOfLastThreeLoginAttempts.stream()
-                                                                                    .allMatch(auditEvent ->
-                                                                                                  EVENT_NAME_IN_CASE_OF_FAILED_LOGIN
-                                                                                                      .equals(auditEvent
-                                                                                                                  .getType()));
+            listOfLastThreeLoginAttempts.size() >= 3 &&
+            listOfLastThreeLoginAttempts.stream().allMatch(auditEvent -> EVENT_NAME_IN_CASE_OF_FAILED_LOGIN.equals(auditEvent.getType()));
 
         if (maxFailedLoginAttempts) {
             userService.lockActiveUser(login);
         }
     }
 
-    private String requestResetIfUserPasswordExpired(String login) {
-        Optional<User> currentUser = userService.findOneByLogin(login);
+    private String requestResetIfUserPasswordExpired(String username) {
+        Optional<User> currentUser = userService.findOneByUsername(username);
         if (currentUser.isPresent()) {
             Optional<User> currentUserModified = userService.requestPasswordReset(currentUser.get().getEmail());
             if (currentUserModified.isPresent()) {

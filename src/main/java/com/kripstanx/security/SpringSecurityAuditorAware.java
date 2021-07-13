@@ -1,8 +1,7 @@
 package com.kripstanx.security;
 
+import com.kripstanx.config.Constants;
 import java.util.Optional;
-
-import com.kripstanx.constants.Constants;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 

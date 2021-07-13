@@ -37,7 +37,6 @@ export class RegisterComponent implements AfterViewInit {
     ],
     email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
     password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
-    gender: [],
   });
 
   constructor(
@@ -64,9 +63,8 @@ export class RegisterComponent implements AfterViewInit {
     const username = this.registerForm.get(['username'])!.value;
     const password = this.registerForm.get(['password'])!.value;
     const email = this.registerForm.get(['email'])!.value;
-    const gender = this.registerForm.get(['gender'])!.value;
 
-    this.registerService.save({ firstName, lastName, username, email, password, gender, langKey: 'en' }).subscribe(
+    this.registerService.save({ firstName, lastName, username, email, password, langKey: 'en' }).subscribe(
       () => (this.success = true),
       response => this.processError(response)
     );
