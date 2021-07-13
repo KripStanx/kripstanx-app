@@ -1,107 +1,116 @@
 {
-    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-    "version": 1,
-    "newProjectRoot": "projects",
-    "projects": {
-        "kripstanx-app": {
-            "root": "",
-            "sourceRoot": "src/main/webapp",
-            "projectType": "application",
-            "architect": {
-                "build": {
-                  "builder": "@angular-builders/custom-webpack:browser",
-                  "options": {
-                    "customWebpackConfig": {
-                      "path": "./webpack/webpack.custom.js"
-                    },
-                    "outputPath": "target/classes/static/",
-                    "index": "src/main/webapp/index.html",
-                    "main": "src/main/webapp/main.ts",
-                    "polyfills": "src/main/webapp/polyfills.ts",
-                    "tsConfig": "tsconfig.app.json",
-                    "aot": true,
-                    "assets": [
-                      "src/main/webapp/content",
-                      "src/main/webapp/favicon.ico",
-                      "src/main/webapp/manifest.webapp",
-                      "src/main/webapp/robots.txt",
-                      {
-                        "glob": "*.{js,css,html,png}",
-                        "input": "./node_modules/swagger-ui-dist",
-                        "output": "swagger-ui",
-                        "ignore": ["**/index.html"]
-                      },
-                      { "glob": "axios.min.js", "input": "./node_modules/axios/dist", "output": "swagger-ui" },
-                      { "glob": "**/*", "input": "src/main/webapp/swagger-ui/", "output": "swagger-ui" }
-                    ],
-                    "styles": [
-                      "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-                      "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-                      "src/main/webapp/content/scss/styles.scss", 
-                      "src/main/webapp/content/scss/vendor.scss", 
-                      "src/main/webapp/content/scss/global.scss"],
-                    "scripts": [
-                      "./node_modules/bootstrap/dist/js/bootstrap.min.js"
-                    ]
-                  },
-                  "configurations": {
-                    "production": {
-                      "optimization": true,
-                      "outputHashing": "all",
-                      "sourceMap": false,
-                      "namedChunks": false,
-                      "extractLicenses": true,
-                      "vendorChunk": false,
-                      "buildOptimizer": true,
-                      "serviceWorker": true,
-                      "ngswConfigPath": "ngsw-config.json",
-                      "budgets": [
-                        {
-                          "type": "initial",
-                          "maximumWarning": "2mb",
-                          "maximumError": "5mb"
-                        },
-                        {
-                          "type": "anyComponentStyle",
-                          "maximumWarning": "6kb",
-                          "maximumError": "10kb"
-                        }
-                      ]
-                    }
-                  }
-                },
-                "serve": {
-                  "builder": "@angular-builders/custom-webpack:dev-server",
-                  "options": {
-                    "browserTarget": "kripstanx-app:build",
-                    "proxyConfig": "./webpack/proxy.conf.js"
-                  },
-                  "configurations": {
-                    "production": {
-                      "browserTarget": "kripstanx-app:build:production"
-                    }
-                  }
-                },
-                "test": {
-                  "builder": "@angular-builders/jest:run",
-                  "options": {
-                    "configPath": "jest.conf.js"
-                  }
-                }
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "kripstanx-app": {
+      "root": "",
+      "sourceRoot": "src/main/webapp",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "customWebpackConfig": {
+              "path": "./webpack/webpack.custom.js"
             },
-            "schematics": {
-                "@schematics/angular:component": {
-                    "style": "scss"
+            "outputPath": "target/classes/static/",
+            "index": "src/main/webapp/index.html",
+            "main": "src/main/webapp/main.ts",
+            "polyfills": "src/main/webapp/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "src/main/webapp/content",
+              "src/main/webapp/favicon.ico",
+              "src/main/webapp/manifest.webapp",
+              "src/main/webapp/robots.txt",
+              {
+                "glob": "*.{js,css,html,png}",
+                "input": "./node_modules/swagger-ui-dist",
+                "output": "swagger-ui",
+                "ignore": ["**/index.html"]
+              },
+              { "glob": "axios.min.js", "input": "./node_modules/axios/dist", "output": "swagger-ui" },
+              { "glob": "**/*", "input": "src/main/webapp/swagger-ui/", "output": "swagger-ui" }
+            ],
+            "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/@fortawesome/fontawesome-free/css/fontawesome.css",
+              "./node_modules/@fortawesome/fontawesome-free/css/solid.css",
+              "./node_modules/@fortawesome/fontawesome-free/css/regular.css",
+              "./node_modules/@fortawesome/fontawesome-free/css/brands.css",
+              "src/main/webapp/content/scss/styles.scss",
+              "src/main/webapp/content/scss/vendor.scss",
+              "src/main/webapp/content/scss/global.scss"
+            ],
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "./node_modules/@popperjs/core/dist/umd/popper.min.js",
+              "./node_modules/particles.js/particles.js",
+              "./node_modules/particles.js/demo/js/app.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
-                "@schematics/angular:application": {
-                    "strict": true
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
-            },
-            "prefix": "jhi"
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "browserTarget": "kripstanx-app:build",
+            "proxyConfig": "./webpack/proxy.conf.js"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "kripstanx-app:build:production"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "configPath": "jest.conf.js"
+          }
         }
-    },
-    "defaultProject": "kripstanx-app",
-    "cli": {
-        "packageManager": "npm"
+      },
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "prefix": "jhi"
     }
+  },
+  "defaultProject": "kripstanx-app",
+  "cli": {
+    "packageManager": "npm"
+  }
 }
