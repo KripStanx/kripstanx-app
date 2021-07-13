@@ -6,7 +6,7 @@ export const loginRoute: Route = {
   component: LoginComponent,
   data: {
     authorities: [],
-    pageTitle: 'global.title',
+    pageTitle: 'global.title' + 'login.title',
   },
   canActivate: [],
 };
